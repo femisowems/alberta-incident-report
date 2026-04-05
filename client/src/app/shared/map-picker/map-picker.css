@@ -1,0 +1,31 @@
+@keyframes pulse-radius {
+  0% { r: 10px; opacity: 0.1; }
+  50% { r: 35px; opacity: 0.3; }
+  100% { r: 30px; opacity: 0.2; }
+}
+
+.pulse-circle {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: pulse-radius 3s ease-in-out infinite;
+}
+
+.custom-marker {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-marker div {
+  animation: bounce-marker 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bounce-marker {
+  from { transform: translateY(-30px) scaleY(1.1); opacity: 0; }
+  to { transform: translateY(0) scaleY(1); opacity: 1; }
+}
+
+/* Ensure suggestions are readable on top of the map */
+.suggestion-dropdown {
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.9);
+}

@@ -1,0 +1,477 @@
+<div class="w-full min-h-screen flex flex-col items-center justify-start animate-in fade-in duration-1000">
+  
+  @if (currentUser()) {
+    <div class="w-full space-y-8 animate-in slide-in-from-bottom-8 duration-700">
+      
+      <!-- PROVINCIAL STATUS BAR -->
+      <div class="ab-glass-dark rounded-[2rem] p-4 flex flex-wrap items-center justify-between gap-6 px-10">
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] font-black text-blue-300 uppercase tracking-widest">Temperature</span>
+            <span class="text-xl font-black text-white leading-none">{{ weatherStatus().temp }}</span>
+          </div>
+          <div class="w-px h-8 bg-white/10"></div>
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] font-black text-blue-300 uppercase tracking-widest">Condition</span>
+            <span class="text-xs font-black text-white uppercase tracking-tight">{{ weatherStatus().condition }}</span>
+          </div>
+        </div>
+        
+        <div class="flex-grow flex items-center justify-center">
+          <div class="px-6 py-2 bg-rose-500/20 border border-rose-500/30 rounded-full flex items-center gap-3 animate-pulse">
+            <svg class="w-4 h-4 text-rose-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+            <span class="text-[10px] font-black text-rose-100 uppercase tracking-widest">{{ weatherStatus().alert }}</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] font-black text-emerald-300 uppercase tracking-widest">Wildfire Risk</span>
+            <span [class]="'text-xs font-black uppercase tracking-tight ' + (weatherStatus().wildfireLevel === 'Low' ? 'text-emerald-400' : 'text-rose-400')">{{ weatherStatus().wildfireLevel }}</span>
+          </div>
+          <div class="w-px h-8 bg-white/10"></div>
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></div>
+            <span class="text-[10px] font-black text-white uppercase tracking-widest">Network Optimal</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Header & Stats -->
+      <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-8 pt-4">
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 bg-[var(--ab-dusk)] text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-lg">Alberta Command</span>
+            <span class="text-slate-300">/</span>
+            <span class="text-slate-400 text-[9px] font-bold uppercase tracking-widest">Strategic Intelligence</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter leading-none">Command Center</h1>
+          <p class="text-slate-500 font-medium italic text-lg opacity-80">Provincial Public Safety Logistics & Response Unit</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 xl:w-auto">
+          <div class="bg-white p-5 rounded-[1.5rem] shadow-sm border border-slate-100 flex flex-col relative overflow-hidden group hover:shadow-2xl hover:scale-105 transition-all">
+            <div class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity">
+              <svg class="w-6 h-6 text-[var(--ab-dusk)]" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
+            </div>
+            <span class="text-[9px] uppercase font-black text-slate-400 tracking-widest leading-none mb-2">Provincial Volume</span>
+            <div class="flex items-end gap-2">
+              <span class="text-3xl font-black text-[var(--ab-dusk)] leading-none">{{ stats().total }}</span>
+              <span class="text-[9px] font-bold text-emerald-500 pb-0.5">↑ 12%</span>
+            </div>
+          </div>
+          <div class="bg-white p-5 rounded-[1.5rem] shadow-sm border border-slate-100 flex flex-col relative overflow-hidden group hover:shadow-2xl hover:scale-105 transition-all">
+            <span class="text-[9px] uppercase font-black text-slate-400 tracking-widest leading-none mb-2">Triage Queue</span>
+            <div class="flex items-end gap-2">
+              <span class="text-3xl font-black text-amber-600 leading-none">{{ stats().pending }}</span>
+              <span class="text-[9px] font-bold text-slate-400 pb-0.5">STABLE</span>
+            </div>
+          </div>
+          <div class="bg-white p-5 rounded-[1.5rem] shadow-sm border border-slate-100 hidden md:flex flex-col relative overflow-hidden group hover:shadow-2xl hover:scale-105 transition-all">
+            <span class="text-[9px] uppercase font-black text-slate-400 tracking-widest leading-none mb-2">Median Triage</span>
+            <div class="flex items-end gap-2">
+              <span class="text-3xl font-black text-slate-900 leading-none">14m</span>
+              <span class="text-[10px] font-bold text-emerald-500 pb-0.5">↓ 2.1m</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <!-- Main Grid Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- LEFT COLUMN: Incident Feed (2/3) -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Filter Bar -->
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center space-x-2 bg-slate-100 p-1 rounded-2xl border border-slate-200">
+              <button (click)="setFilter('all')" [class]="'px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ' + (filterStatus() === 'all' ? 'bg-white shadow-xl text-[var(--ab-dusk)] border border-slate-100' : 'text-slate-400 hover:text-slate-600')">All Strategic cases</button>
+              <button (click)="setFilter('submitted')" [class]="'px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ' + (filterStatus() === 'submitted' ? 'bg-white shadow-xl text-[var(--ab-dusk)] border border-slate-100' : 'text-slate-400 hover:text-slate-600')">Awaiting Triage</button>
+              <button (click)="setFilter('resolved')" [class]="'px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ' + (filterStatus() === 'resolved' ? 'bg-white shadow-xl text-[var(--ab-dusk)] border border-slate-100' : 'text-slate-400 hover:text-slate-600')">Archived</button>
+            </div>
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] animate-pulse">Live District Uplink: Active</span>
+          </div>
+
+          <!-- Scrollable List -->
+          <div class="grid grid-cols-1 gap-3">
+            <div *ngFor="let report of paginatedReports()" [class]="'group bg-white rounded-[1.5rem] p-0.5 border transition-all duration-700 ' + (report.isHighPriority ? 'border-rose-400 shadow-2xl shadow-rose-100' : 'border-slate-100 shadow-sm hover:shadow-2xl hover:border-[var(--ab-sky)]')">
+              <div class="flex flex-col md:flex-row md:items-center p-4 gap-4">
+                <!-- Status Orb -->
+                <div class="flex-shrink-0 relative">
+                  <div [class]="'w-1.5 h-10 rounded-full ' + (report.status === 'submitted' ? 'bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.3)]' : report.status === 'assigned' ? 'bg-[var(--ab-sky)] shadow-[0_0_10px_rgba(57,166,219,0.3)]' : 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.3)]')"></div>
+                </div>
+
+                <!-- Main Info -->
+                <div class="flex-grow min-w-0">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-[8px] font-black uppercase text-[var(--ab-dusk)] tracking-[0.2em] bg-slate-50 px-2 py-0.5 rounded">{{ report.id }}</span>
+                    <span [class]="'px-2 py-0.5 rounded-full text-[8px] font-black border uppercase tracking-widest ' + getSLABadge(report.ageHours)">
+                      SLA: {{ report.ageHours | number:'1.0-0' }}h
+                    </span>
+                    <span *ngIf="report.isHighPriority" class="px-2 py-0.5 bg-rose-600 text-white rounded-full text-[7px] font-black uppercase tracking-tighter animate-bounce">Alpha</span>
+                  </div>
+                  <h3 class="text-lg font-black text-slate-900 truncate tracking-tight mb-0.5">{{ report.address }}</h3>
+                  <p class="text-xs text-slate-500 line-clamp-1 italic font-medium leading-relaxed opacity-80">{{ report.description }}</p>
+                </div>
+
+                <!-- Strategic Controls -->
+                <div class="flex items-center justify-between md:justify-end gap-6 border-t md:border-0 pt-4 md:pt-0 border-slate-50">
+                  <div class="text-right flex flex-col">
+                    <span class="text-[8px] uppercase font-black text-slate-400 mb-0.5 tracking-widest">Type-Sig</span>
+                    <span class="text-[10px] font-black text-slate-900 group-hover:text-[var(--ab-sky)] transition-colors uppercase tracking-tight">{{ report.type | titlecase }}</span>
+                  </div>
+                  <button (click)="selectReport(report)" class="ab-button-primary !py-2 !px-6 !text-[9px] !rounded-xl">Audit Record</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Tactically Paginated Navigation -->
+          <div *ngIf="totalPages() > 1" class="flex items-center justify-center gap-4 pt-10">
+            <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border border-slate-100 shadow-sm text-slate-400 hover:text-[var(--ab-dusk)] hover:border-[var(--ab-sky)] transition-all disabled:opacity-20 active:scale-90">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <div class="flex items-center gap-2 p-2 bg-slate-50 rounded-[2rem] border border-slate-100">
+              @for (page of pages(); track page) {
+                <button (click)="goToPage(page)" [class]="'w-10 h-10 rounded-xl text-[10px] font-black transition-all ' + (page === currentPage() ? 'bg-[var(--ab-dusk)] text-white shadow-xl' : 'text-slate-400 hover:bg-white')">{{ page }}</button>
+              }
+            </div>
+            <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border border-slate-100 shadow-sm text-slate-400 hover:text-[var(--ab-dusk)] hover:border-[var(--ab-sky)] transition-all disabled:opacity-20 active:scale-90">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Strategic Intelligence -->
+        <div class="space-y-6">
+          
+          <!-- TACTICAL DISTRICT HEATMAP -->
+          <div class="ab-glass-dark rounded-[1.5rem] p-6 space-y-4 border border-white/5 relative overflow-hidden group">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L16 4m0 13V4m0 0L9 7"></path></svg>
+                </div>
+                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">Tactical Heatmap</h3>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-[8px] font-black text-emerald-400 uppercase tracking-widest">Live Uplink</span>
+              </div>
+            </div>
+
+            <div class="relative w-full aspect-[4/5] bg-slate-950/40 rounded-[2.5rem] border border-white/5 flex items-center justify-center p-6 overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent pointer-events-none"></div>
+              
+              <svg viewBox="0 0 200 320" class="w-full h-full drop-shadow-2xl">
+                <!-- Alberta Stylized Silhouette -->
+                <path d="M 50,30 L 150,30 L 150,290 L 110,290 L 50,210 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-dasharray="4 4" />
+                
+                <!-- Tactical Grid Lines -->
+                <line x1="100" y1="20" x2="100" y2="300" stroke="rgba(255,255,255,0.03)" stroke-width="0.5" />
+                <line x1="40" y1="160" x2="160" y2="160" stroke="rgba(255,255,255,0.03)" stroke-width="0.5" />
+
+                <!-- Dynamic Intensity Nodes -->
+                @for (node of mapNodes(); track node.ward) {
+                  <g class="cursor-pointer group/node transition-all duration-500">
+                    <!-- Range Aura -->
+                    <circle [attr.cx]="node.x" [attr.cy]="node.y" [attr.r]="15 + (node.intensity / 8)" 
+                            [attr.fill]="node.intensity > 50 ? 'rgba(244,63,94,0.1)' : 'rgba(59,130,246,0.1)'" 
+                            class="animate-pulse" />
+                    
+                    <!-- Tactical Beacon -->
+                    <circle [attr.cx]="node.x" [attr.cy]="node.y" r="4.5" 
+                            [attr.fill]="node.intensity > 50 ? '#f43f5e' : '#3b82f6'" 
+                            [class]="'transition-all duration-300 ' + (node.intensity > 70 ? 'ab-pulse-heat' : '')" />
+                    
+                    <!-- Beacon Ring -->
+                    <circle [attr.cx]="node.x" [attr.cy]="node.y" [attr.r]="node.intensity > 70 ? 8 : 6" 
+                            fill="none" [attr.stroke]="node.intensity > 50 ? '#f43f5e' : '#3b82f6'" 
+                            stroke-width="1" class="opacity-30" />
+
+                    <!-- District Designator -->
+                    <text [attr.x]="node.x + 12" [attr.y]="node.y + 4" 
+                          fill="rgba(255,255,255,0.3)" class="text-[8px] font-black uppercase tracking-tighter opacity-0 group-hover/node:opacity-100 transition-opacity">
+                      {{ node.ward }} ({{ node.count }})
+                    </text>
+                  </g>
+                }
+              </svg>
+
+              <!-- Intensity Legend -->
+              <div class="absolute bottom-6 right-6 space-y-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]"></div>
+                  <span class="text-[7px] font-black text-white/20 uppercase tracking-[0.2em]">High Alert</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]"></div>
+                  <span class="text-[7px] font-black text-white/20 uppercase tracking-[0.2em]">Nominal</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- District Triage Metrics -->
+          <div class="ab-glass rounded-[3rem] p-8 space-y-8">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-black text-[var(--ab-dusk)] uppercase tracking-[0.2em]">Regional Triage</h3>
+              <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Real-time stats</span>
+            </div>
+            <div class="space-y-6">
+              @for (region of regionalStats(); track region.ward) {
+                <div class="flex items-center justify-between group">
+                  <div class="space-y-1">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">{{ region.ward }}</span>
+                    <div class="flex items-center gap-3">
+                      <span class="text-2xl font-black text-slate-900 transition-transform group-hover:scale-110">{{ region.count }}</span>
+                      <span [class]="'text-[9px] font-black px-2 py-0.5 rounded uppercase ' + (region.trend === 'up' ? 'bg-rose-50 text-rose-600' : region.trend === 'down' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400')">
+                        {{ region.trend }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-[var(--ab-sky)] transition-all duration-1000" [style.width.%]="(region.count / 30) * 100"></div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Network Monitor -->
+          <div class="bg-slate-900 rounded-[3rem] p-8 text-white relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-8 opacity-10"><svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg></div>
+            <h3 class="text-[9px] font-black text-blue-300 uppercase tracking-[0.3em] mb-8 relative z-10">Infrastructure Integrity</h3>
+            <div class="space-y-6 relative z-10">
+              @for (system of systemHealth(); track system.name) {
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{{ system.name }}</span>
+                  <div class="flex items-center gap-3">
+                    <span class="text-[9px] font-black text-white uppercase">{{ system.latency }}</span>
+                    <div [class]="'w-1.5 h-1.5 rounded-full ' + (system.status === 'optimal' ? 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]' : 'bg-rose-400')"></div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- AUDIT MODAL: REFINED SPATIAL BALANCE -->
+      @if (selectedReport(); as report) {
+        <div class="fixed inset-0 z-50 flex items-start justify-center p-4 bg-[#0a1128]/50 backdrop-blur-md animate-in fade-in duration-300 overflow-y-auto pt-32 pb-10">
+          <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-4xl flex flex-col overflow-hidden animate-in slide-in-from-top-4 duration-500 border border-slate-200">
+            
+            <!-- MODAL HEADER -->
+            <div class="p-6 bg-slate-900 text-white flex-shrink-0 flex items-center justify-between relative">
+              <div class="relative z-10">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="px-3 py-1 bg-blue-500/20 border border-blue-400/30 rounded-full text-[8px] font-black uppercase tracking-widest text-blue-300">Provincial Audit Record</span>
+                  <span class="text-[8px] font-black uppercase text-slate-500 opacity-60">ID: {{ report.id }}</span>
+                </div>
+                <h2 class="text-lg font-black tracking-tighter leading-none flex items-baseline gap-2 capitalize">
+                  {{ (report.type || 'Unknown') | titlecase }} 
+                  <span class="text-blue-400 font-light opacity-30">/</span> 
+                  <span class="text-slate-400 italic font-medium text-[14px]">{{ (report.address || '').split(',')[0] }}</span>
+                </h2>
+              </div>
+
+              <div class="flex items-center gap-3 relative z-10">
+                <div [class]="'px-4 py-2 rounded-xl flex flex-col items-center justify-center border border-white/10 ' + getPriorityInfo(report).class">
+                  <span class="text-[7px] font-black uppercase opacity-80">{{ getPriorityInfo(report).code }}</span>
+                  <span class="text-[10px] font-black uppercase whitespace-nowrap">{{ getPriorityInfo(report).label }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button (click)="toggleEditMode()" [class]="'w-10 h-10 rounded-xl flex items-center justify-center border border-white/10 transition-all ' + (isEditing() ? 'bg-[var(--ab-prairie)] text-slate-900' : 'bg-white/5 hover:bg-white/10 text-white')">
+                    <svg *ngIf="!isEditing()" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    <svg *ngIf="isEditing()" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+                  <button (click)="selectReport(null)" class="w-10 h-10 bg-white/5 hover:bg-rose-600 text-white rounded-xl flex items-center justify-center transition-all border border-white/10">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- MODAL CONTENT -->
+            <div class="flex-grow flex flex-col md:flex-row overflow-hidden bg-slate-50">
+              
+              <!-- LEFT: CORE DATA -->
+              <div class="w-full md:w-3/5 p-6 border-r border-slate-200 overflow-y-auto custom-scrollbar space-y-6">
+                <!-- LIFECYCLE -->
+                <div class="bg-white p-6 rounded-[1.5rem] border border-slate-100 shadow-sm relative overflow-hidden group">
+                  <div class="absolute inset-0 bg-blue-50/10 pointer-events-none"></div>
+                  <h3 class="text-[8px] uppercase font-black text-slate-400 tracking-[0.3em] mb-6 text-center relative z-10">Incident Lifecycle</h3>
+                  <div class="flex items-center justify-between relative px-10 z-10">
+                    <div class="absolute top-5 left-10 right-10 h-1 bg-slate-100"></div>
+                    
+                    <div class="relative flex flex-col items-center gap-3">
+                      <div class="w-10 h-10 rounded-full bg-emerald-500 border-4 border-white shadow-lg flex items-center justify-center z-10">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M5 13l4 4L19 7"></path></svg>
+                      </div>
+                      <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Intake</span>
+                    </div>
+
+                    <div class="relative flex flex-col items-center gap-3">
+                      <div class="w-10 h-10 rounded-full bg-[var(--ab-sky)] border-4 border-white shadow-lg flex items-center justify-center z-10">
+                        <div class="w-2 h-2 bg-white rounded-full animate-ping"></div>
+                      </div>
+                      <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Triage</span>
+                    </div>
+
+                    <div [class]="'relative flex flex-col items-center gap-3 transition-all duration-700 ' + (report.status === 'assigned' ? 'opacity-100' : 'opacity-20')">
+                      <div [class]="'w-10 h-10 rounded-full border-4 border-white shadow-lg flex items-center justify-center z-10 ' + (report.status === 'assigned' ? 'bg-emerald-500' : 'bg-slate-400')">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                      </div>
+                      <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Deploy</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="space-y-3">
+                  <span class="text-[9px] uppercase font-black text-slate-500 tracking-[0.2em] block">Investigative Narrative</span>
+                  <div *ngIf="!isEditing()" class="p-6 bg-white border border-slate-100 rounded-xl shadow-sm italic hover:shadow-md transition-all duration-500">
+                    <p class="text-sm font-bold text-slate-900 leading-relaxed opacity-90">"{{ report.description }}"</p>
+                  </div>
+                  <textarea *ngIf="isEditing()" [(ngModel)]="report.description" class="w-full bg-white border-2 border-blue-200 rounded-xl p-6 text-sm font-bold italic focus:ring-8 focus:ring-blue-100 transition-all outline-none shadow-inner min-h-[150px] custom-scrollbar"></textarea>
+                </div>
+
+                <!-- SPATIAL -->
+                <div class="space-y-3">
+                  <span class="text-[9px] uppercase font-black text-slate-500 tracking-[0.2em] block">Spatial Intelligence Vector</span>
+                  <div class="flex items-center gap-4 bg-slate-900 text-white p-5 rounded-xl border border-white/5 shadow-xl relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-900/40 to-transparent"></div>
+                    <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-[var(--ab-sky)] shrink-0 relative z-10 animate-pulse transition-transform">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                    </div>
+                    <div class="relative z-10 min-w-0">
+                      <span class="block text-sm font-black tracking-tighter leading-tight mb-1 truncate">{{ report.address }}</span>
+                      <div class="flex items-center gap-3 text-[7px] font-black text-slate-500 tracking-widest uppercase">
+                        <span>LAT: {{ report.lat | number:'1.4-4' }}</span>
+                        <span class="w-1 h-1 bg-slate-700 rounded-full"></span>
+                        <span>LNG: {{ report.lng | number:'1.4-4' }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT: INTELLIGENCE -->
+              <div class="w-full md:w-2/5 p-6 space-y-6 overflow-y-auto bg-slate-100/30 custom-scrollbar">
+                <!-- AI RECO -->
+                <div class="bg-slate-900 rounded-[1.5rem] p-6 border border-white/5 relative overflow-hidden group/reco">
+                  <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 opacity-50"></div>
+                  <div class="relative z-10">
+                    <div class="flex items-center gap-2 mb-4">
+                      <div class="w-6 h-6 rounded-lg bg-emerald-500/20 flex items-center justify-center"><svg class="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"></path></svg></div>
+                      <h3 class="text-[8px] font-black uppercase tracking-[0.3em] text-emerald-300">Tactical Recommendation</h3>
+                    </div>
+                    @if (recommendedUnit()) {
+                      <div class="bg-white/5 rounded-xl p-4 border border-white/10 group-hover/reco:border-emerald-500/40 transition-all">
+                        <span class="block text-base font-black text-white tracking-tight mb-1">{{ recommendedUnit()?.name }}</span>
+                        <span class="text-[8px] font-black uppercase tracking-widest text-emerald-400">{{ recommendedUnit()?.specialty }} Specialist</span>
+                      </div>
+                    } @else {
+                      <p class="text-[9px] text-slate-500 italic">Scanning district units...</p>
+                    }
+                  </div>
+                </div>
+
+                <!-- INTEL GRID -->
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="p-5 bg-slate-900 rounded-xl text-white border border-white/5 relative overflow-hidden">
+                    <span class="relative z-10 block text-[6px] font-black text-blue-300 uppercase tracking-widest mb-1">Station Temp</span>
+                    <span class="relative z-10 text-xl font-black">{{ incidentWeather()?.temp }}</span>
+                  </div>
+                  <div class="p-5 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
+                    <span class="block text-[6px] font-black text-slate-400 uppercase tracking-widest mb-1">Field Alert</span>
+                    <span class="block text-xs font-black text-slate-900 tracking-tight leading-tight">{{ incidentWeather()?.label }}</span>
+                  </div>
+                </div>
+
+                <!-- EVIDENCE GALLERY -->
+                <div class="space-y-3">
+                  <span class="text-[9px] uppercase font-black text-slate-500 tracking-[0.2em] block">Evidentiary Chain</span>
+                  @if (report.media_urls?.length) {
+                    <div class="grid grid-cols-2 gap-3">
+                      @for (url of report.media_urls; track url) {
+                        <div class="aspect-square bg-slate-200 rounded-xl overflow-hidden border border-white shadow-sm hover:shadow-lg transition-transform hover:scale-105 duration-500 cursor-zoom-in">
+                          <img [src]="url" class="w-full h-full object-cover" />
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <div class="py-8 bg-slate-100 rounded-xl border border-dashed border-slate-200 flex flex-col items-center justify-center opacity-60">
+                      <svg class="w-6 h-6 text-slate-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                      <span class="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-tight">No Data</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- ACTION BAR -->
+            <div class="p-6 bg-white border-t border-slate-200 flex items-center justify-between gap-6 flex-shrink-0">
+               <div class="flex items-center gap-3 flex-grow">
+                 <button (click)="initiateAssignment()" [class]="'flex-grow py-4 rounded-xl font-black text-xs uppercase tracking-widest transition-all active:scale-95 shadow-xl flex items-center justify-center gap-3 ' + (report.status === 'assigned' ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200' : 'bg-slate-900 hover:bg-slate-800 text-white')" [disabled]="report.status === 'assigned'">
+                   <span>{{ report.status === 'assigned' ? 'Unit Deployed' : 'Deploy Command Resource' }}</span>
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                 </button>
+                 <button (click)="markAsHighPriority()" [class]="'px-6 py-4 rounded-xl font-black text-xs uppercase border-2 ' + (report.isHighPriority ? 'border-rose-500 bg-rose-50 text-rose-600' : 'border-slate-100 bg-slate-50 text-slate-400 hover:border-slate-200')">
+                    P1
+                 </button>
+               </div>
+               <div *ngIf="isEditing()" class="animate-in slide-in-from-right-10 duration-500">
+                 <button (click)="saveEdits()" class="bg-[var(--ab-pasture)] text-white px-8 py-4 rounded-xl font-black text-xs uppercase shadow-xl hover:scale-105 active:scale-95 transition-all">Save Mod</button>
+               </div>
+            </div>
+
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <!-- ALBERTA COMMAND LOCK STATE -->
+    <div class="max-w-3xl w-full text-center space-y-12 animate-in zoom-in-95 duration-1000 pb-20">
+      <div class="relative inline-block">
+        <div class="w-40 h-40 ab-glass-dark rounded-[4rem] flex items-center justify-center text-[var(--ab-prairie)] shadow-2xl border border-white/10">
+          <svg class="w-20 h-20 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m0-6V9m0 12a9 9 0 110-18 9 9 0 010 18z"></path></svg>
+        </div>
+        <div class="absolute -top-4 -right-4 w-14 h-14 bg-[var(--ab-sunset)] rounded-3xl flex items-center justify-center text-white shadow-2xl rotate-12 border-4 border-white">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="flex items-center justify-center gap-4">
+          <span class="h-px w-12 bg-slate-200"></span>
+          <span class="text-[11px] font-black text-[var(--ab-dusk)] uppercase tracking-[0.5em]">Classified Terminal Restricted</span>
+          <span class="h-px w-12 bg-slate-200"></span>
+        </div>
+        <h2 class="text-7xl font-black text-slate-900 tracking-tighter leading-none mb-6">Provincial Command Identity Required</h2>
+        <p class="text-2xl text-slate-500 font-medium italic max-w-xl mx-auto leading-relaxed opacity-80">This station is restricted to active Provincial Safety Officers. Strategic telemetry and district resource controls require biometric signature verification.</p>
+      </div>
+
+      <div class="pt-10 flex flex-col items-center gap-8">
+        <button routerLink="/login" class="ab-button-primary !py-8 !px-16 !text-lg group">
+          <span class="uppercase tracking-[0.2em] flex items-center gap-6">
+            Begin Strategic Authentication
+            <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </span>
+        </button>
+        
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+            <span class="text-[10px] uppercase font-black text-slate-400 tracking-widest">TLS 1.3 Active</span>
+          </div>
+          <div class="w-1 h-1 bg-slate-200 rounded-full"></div>
+          <span class="text-[10px] uppercase font-black text-slate-400 tracking-widest">Registry Shield v4.2</span>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

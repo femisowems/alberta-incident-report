@@ -1,0 +1,31 @@
+{
+  "name": "alberta-incident-portal",
+  "version": "1.0.0",
+  "description": "High-fidelity municipal command interface for non-emergency incident triage and forensic reporting.",
+  "author": "Municipal Public Safety Division",
+  "license": "Private",
+  "private": true,
+  "homepage": "https://alberta-incident.ssowemimo.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/femisowems/alberta-incident-report.git"
+  },
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run start:dev --workspace=server\" \"npm run start --workspace=client\"",
+    "build:all": "npm run build --workspaces",
+    "lint:all": "npm run lint --workspaces",
+    "test:all": "npm run test --workspaces",
+    "clean": "rm -rf client/dist server/dist node_modules .angular",
+    "install:all": "npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

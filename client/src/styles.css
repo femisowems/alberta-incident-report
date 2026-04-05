@@ -1,0 +1,92 @@
+@import 'tailwindcss';
+
+@layer base {
+  :root {
+    /* Alberta Landscape Palette */
+    --ab-dusk: #003152;
+    --ab-sky: #39A6DB;
+    --ab-pasture: #007A33;
+    --ab-prairie: #FFB81C;
+    --ab-sunset: #E05206;
+    --ab-stone: #343434;
+    
+    /* Functional Tokens */
+    --brand-primary: var(--ab-dusk);
+    --brand-secondary: var(--ab-prairie);
+    --bg-surface: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.8);
+  }
+
+  body {
+    @apply antialiased text-slate-900 bg-slate-50;
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  }
+}
+
+@layer components {
+  .ab-glass {
+    @apply backdrop-blur-xl bg-white/70 border border-white/40 shadow-2xl;
+  }
+  
+  .ab-glass-dark {
+    @apply backdrop-blur-xl bg-slate-900/80 border border-white/5 shadow-2xl;
+  }
+
+  .ab-button-primary {
+    @apply bg-[var(--ab-dusk)] hover:bg-slate-800 text-white font-black py-4 px-8 rounded-2xl transition-all active:scale-95 shadow-xl;
+  }
+
+  .ab-gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[var(--ab-dusk)] to-[var(--ab-sky)];
+  }
+}
+
+.rockies-bg {
+  background-image: url('assets/alberta_rockies_login_background.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.ab-pulse-heat {
+  animation: pulse-heat 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-heat {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1.5) drop-shadow(0 0 12px rgba(244, 63, 94, 0.9));
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.2);
+    filter: brightness(1) drop-shadow(0 0 20px rgba(244, 63, 94, 1));
+  }
+}
+
+/* Custom Scrollbar for Command Center */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 49, 82, 0.1);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 49, 82, 0.2);
+}
+
+.ab-glass-dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ab-glass-dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

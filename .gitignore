@@ -1,0 +1,49 @@
+# [TPS] Citizen Incident Reporting Portal - Forensic Gitignore
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Angular
+.angular/
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# NestJS
+dist/
+*.tsbuildinfo
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# CI / Testing
+coverage/
+cypress/videos/
+cypress/screenshots/
+.nyc_output/
+
+# Assistant / AI metadata
+.gemini/
+.antigravity/
+.agents/
+knowledge/
+brain/
+*.md.tmp
+
+# Deployment
+.railway/
+railway.json

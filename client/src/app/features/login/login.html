@@ -1,0 +1,183 @@
+<div class="min-h-screen flex items-center justify-center p-6 bg-slate-900 relative overflow-hidden rockies-bg">
+  <!-- Dynamic Backdrop Overlay -->
+  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]"></div>
+
+  <div class="w-full max-w-[460px] relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+    <!-- Premium Header -->
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center justify-center w-32 h-20 bg-white rounded-3xl mb-6 shadow-2xl relative group overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-white to-slate-50"></div>
+        <span class="relative z-10 text-[var(--ab-dusk)] font-black text-xs uppercase tracking-[0.2em]">Alberta</span>
+        <div class="absolute bottom-0 inset-x-0 h-1.5 bg-[var(--ab-prairie)]"></div>
+      </div>
+      <h1 class="text-4xl font-black text-white tracking-tighter mb-2 drop-shadow-lg">Citizen Identity Portal</h1>
+      <p class="text-blue-100/70 font-semibold tracking-wide uppercase text-[10px] drop-shadow-md">Provincial Public Safety Access Network</p>
+    </div>
+
+    <!-- Enhanced Glass Card -->
+    <div class="ab-glass rounded-[3rem] p-10 md:p-12 relative overflow-hidden transition-all duration-700 hover:shadow-blue-900/20 group">
+      
+      <!-- Premium Loading Overlay -->
+      @if (loading()) {
+        <div class="absolute inset-0 bg-white/60 z-20 flex flex-col items-center justify-center backdrop-blur-md animate-in fade-in duration-300">
+          <div class="w-16 h-16 relative">
+            <div class="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-t-[var(--ab-dusk)] rounded-full animate-spin"></div>
+          </div>
+          <p class="mt-6 font-black text-[var(--ab-dusk)] tracking-[0.3em] uppercase text-[9px]">Verifying Identity...</p>
+        </div>
+      }
+
+      <!-- Status Alerts -->
+      @if (successMessage()) {
+        <div class="mb-8 p-5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-800 rounded-2xl text-xs font-bold animate-in zoom-in-95 duration-500 flex items-start backdrop-blur-sm">
+          <svg class="w-5 h-5 mr-3 mt-0.5 flex-shrink-0 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+          {{ successMessage() }}
+        </div>
+      }
+
+      @if (errorMessage()) {
+        <div class="mb-8 p-5 bg-rose-500/10 border border-rose-500/20 text-rose-800 rounded-2xl text-xs font-bold animate-in zoom-in-95 duration-500 flex items-start backdrop-blur-sm">
+          <svg class="w-5 h-5 mr-3 mt-0.5 flex-shrink-0 text-rose-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (!currentUser()) {
+        @switch (viewMode()) {
+          <!-- SIGN IN VIEW -->
+          @case ('login') {
+            <div class="animate-in fade-in slide-in-from-right-8 duration-700">
+              <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-black text-[var(--ab-dusk)] tracking-tight">Sign In</h2>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">v2.1 Premium</span>
+              </div>
+              
+              <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="space-y-6">
+                <div class="space-y-2">
+                  <label for="email" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">Secure Identifier (Email)</label>
+                  <input type="email" id="email" formControlName="email" class="w-full p-5 bg-white/50 border border-white focus:ring-8 focus:ring-blue-100/50 focus:bg-white focus:border-[var(--ab-dusk)] rounded-2xl outline-none transition-all font-bold text-slate-800 placeholder:text-slate-300" placeholder="your@email.com" />
+                </div>
+                <div class="space-y-2">
+                  <label for="password" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">Access Key (Password)</label>
+                  <input type="password" id="password" formControlName="password" class="w-full p-5 bg-white/50 border border-white focus:ring-8 focus:ring-blue-100/50 focus:bg-white focus:border-[var(--ab-dusk)] rounded-2xl outline-none transition-all font-bold text-slate-800 placeholder:text-slate-300" placeholder="••••••••" />
+                </div>
+                <button type="submit" [disabled]="loginForm.invalid || loading()" class="ab-button-primary w-full group relative overflow-hidden">
+                  <span class="relative z-10 flex items-center justify-center gap-3">
+                    Initiate Portal Access
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                  </span>
+                </button>
+              </form>
+              
+              <div class="mt-10 flex flex-col items-center gap-5 border-t border-white/40 pt-10">
+                <button (click)="setMode('magic')" class="text-xs font-black text-[var(--ab-dusk)] hover:text-blue-900 transition-colors tracking-tight uppercase">Login with Magic Link</button>
+                <div class="flex items-center gap-4 text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">
+                  <span class="w-12 h-px bg-slate-200"></span> OR <span class="w-12 h-px bg-slate-200"></span>
+                </div>
+                <p class="text-xs font-bold text-slate-500">Need access? <button (click)="setMode('signup')" class="text-[var(--ab-dusk)] font-black hover:underline">Enroll Now</button></p>
+                <button (click)="setMode('forgot')" class="text-[9px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-600 transition-colors">Key Recovery</button>
+              </div>
+            </div>
+          }
+
+          <!-- REGISTRATION VIEW -->
+          @case ('signup') {
+            <div class="animate-in fade-in slide-in-from-right-8 duration-700">
+              <h2 class="text-2xl font-black text-[var(--ab-dusk)] mb-8 tracking-tight">Identity Enrollment</h2>
+              <form [formGroup]="signupForm" (ngSubmit)="onSignup()" class="space-y-4">
+                <div class="space-y-1.5">
+                  <label for="name" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Legal Name</label>
+                  <input type="text" id="name" formControlName="name" class="w-full p-4 bg-white/50 border border-white rounded-2xl focus:ring-8 focus:ring-blue-100/50 focus:bg-white focus:border-[var(--ab-dusk)] outline-none transition-all font-bold" />
+                </div>
+                <div class="space-y-1.5">
+                  <label for="reg-email" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Digital Identity (Email)</label>
+                  <input type="email" id="reg-email" formControlName="email" class="w-full p-4 bg-white/50 border border-white rounded-2xl focus:ring-8 focus:ring-blue-100/50 focus:bg-white focus:border-[var(--ab-dusk)] outline-none transition-all font-bold" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="space-y-1.5">
+                    <label for="reg-pass" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Key</label>
+                    <input type="password" id="reg-pass" formControlName="password" class="w-full p-4 bg-white/50 border border-white rounded-2xl focus:ring-8 focus:ring-blue-100/50 focus:bg-white focus:border-[var(--ab-dusk)] outline-none transition-all font-bold" />
+                  </div>
+                  <div class="space-y-1.5">
+                    <label for="reg-confirm" class="block text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Confirm</label>
+                    <input type="password" id="reg-confirm" formControlName="confirmPassword" class="w-full p-4 bg-white/50 border border-white rounded-2xl focus:ring-8 focus:ring-blue-100/50 focus:bg-white focus:border-[var(--ab-dusk)] outline-none transition-all font-bold" />
+                  </div>
+                </div>
+                <button type="submit" [disabled]="signupForm.invalid || loading()" class="w-full mt-4 py-5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-black shadow-xl transition-all active:scale-95 disabled:opacity-50">Generate Credentials</button>
+              </form>
+              <button (click)="setMode('login')" class="mt-8 w-full text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] hover:text-[var(--ab-dusk)] transition-colors">Return to Security Checkpoint</button>
+            </div>
+          }
+
+          <!-- KEY RECOVERY VIEW -->
+          @case ('forgot') {
+            <div class="animate-in fade-in slide-in-from-right-8 duration-700 text-center">
+              <div class="inline-flex items-center justify-center w-20 h-20 bg-rose-50 text-rose-600 rounded-[2rem] mb-6 shadow-sm">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m0 0v2m0-2h2m-2 0H10m4-11a4 4 0 11-8 0 4 4 0 018 0zM7 10h10M7 14h10"></path></svg>
+              </div>
+              <h2 class="text-2xl font-black text-[var(--ab-dusk)] mb-3 tracking-tight">Key Recovery</h2>
+              <p class="text-xs font-bold text-slate-500 mb-10 leading-relaxed px-6 italic">Enter your secure identifier for immediate key rotation telemetry.</p>
+              <form [formGroup]="forgotForm" (ngSubmit)="onForgotPassword()" class="space-y-6">
+                <input type="email" formControlName="email" class="w-full p-5 bg-white/50 border border-white rounded-2xl focus:ring-8 focus:ring-blue-100/50 focus:bg-white focus:border-[var(--ab-dusk)] outline-none transition-all font-bold text-center" placeholder="your@email.com" />
+                <button type="submit" [disabled]="forgotForm.invalid || loading()" class="ab-button-primary w-full">Initiate Recovery</button>
+              </form>
+              <button (click)="setMode('login')" class="mt-10 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-[var(--ab-dusk)] transition-colors">Back to Checkpoint</button>
+            </div>
+          }
+
+          <!-- MAGIC LINK VIEW -->
+          @case ('magic') {
+            <div class="animate-in fade-in slide-in-from-right-8 duration-700 text-center">
+              <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-50 text-blue-600 rounded-[2rem] mb-6 shadow-sm">
+                <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+              </div>
+              <h2 class="text-2xl font-black text-[var(--ab-dusk)] mb-3 tracking-tight">Instant Token Link</h2>
+              <p class="text-xs font-bold text-slate-500 mb-10 leading-relaxed px-6 italic">We'll transmit a high-priority magic link for automated authentication.</p>
+              <form [formGroup]="magicLinkForm" (ngSubmit)="onMagicLink()" class="space-y-6">
+                <input type="email" formControlName="email" class="w-full p-5 bg-white/50 border border-white rounded-2xl focus:ring-8 focus:ring-blue-100/50 focus:bg-white focus:border-[var(--ab-dusk)] outline-none transition-all font-bold text-center" placeholder="your@email.com" />
+                <button type="submit" [disabled]="magicLinkForm.invalid || loading()" class="ab-button-primary w-full">Transmit Access Link</button>
+              </form>
+              <button (click)="setMode('login')" class="mt-10 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-[var(--ab-dusk)] transition-colors">Back to Checkpoint</button>
+            </div>
+          }
+        }
+      } @else {
+        <!-- ACTIVE SESSION STATE -->
+        <div class="animate-in zoom-in-95 duration-1000 text-center space-y-10">
+          <div class="relative inline-block group">
+            <div class="w-32 h-32 bg-white/50 rounded-[3rem] flex items-center justify-center text-[var(--ab-dusk)] mx-auto shadow-inner border border-white relative z-10 transition-transform group-hover:scale-105 duration-500">
+              <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+            </div>
+            <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-emerald-500 rounded-2xl border-4 border-white flex items-center justify-center shadow-2xl z-20 animate-bounce">
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <h2 class="text-2xl font-black text-[var(--ab-dusk)] tracking-tight">Access Protocol Verified</h2>
+            <p class="text-sm font-black text-blue-600 bg-blue-100/50 py-2 px-4 rounded-full inline-block backdrop-blur-sm">{{ currentUser()?.email }}</p>
+          </div>
+
+          <div class="space-y-4 pt-6 border-t border-white/40">
+            <button (click)="goToDashboard()" class="ab-button-primary w-full flex items-center justify-center gap-4 group">
+              Launch Command Center
+              <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+            
+            <button (click)="onLogout()" class="w-full py-4 text-slate-400 hover:text-rose-600 font-bold uppercase text-[9px] tracking-[0.3em] transition-colors">
+              Terminate High-Trust Session
+            </button>
+          </div>
+        </div>
+      }
+
+    </div>
+
+    <!-- Security Infrastructure Note -->
+    <p class="mt-10 text-center text-[9px] text-white/50 font-black uppercase tracking-[0.3em] flex items-center justify-center drop-shadow-md">
+      <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+      Secure Provincial Environment . AES-256 Link
+    </p>
+  </div>
+</div>
