@@ -16,7 +16,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const finalKey = formattedPublicKey || secretKey;
 
     if (!finalKey) {
-      throw new Error('Neither SUPABASE_JWT_PUBLIC_KEY nor SUPABASE_JWT_SECRET is defined');
+      throw new Error(
+        '[AIS Security] Deployment Failure: Neither SUPABASE_JWT_PUBLIC_KEY nor SUPABASE_JWT_SECRET is defined. ' +
+        'Please ensure these are set in your Railway Project Variables or local .env file.'
+      );
     }
 
     const algorithm = formattedPublicKey ? 'ES256' : 'HS256';

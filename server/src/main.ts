@@ -18,21 +18,36 @@ async function bootstrap(): Promise<INestApplication> {
       transform: true,
     }));
     
-    app.setGlobalPrefix('api');
+    // Dynamic CORS configuration for production resilience
     const allowedOrigins = [
-      'https://alberta-incident.ssowemimo.com', 
+      'https://albertaincident.ssowemimo.com', 
       'https://alberta-incident-report-client.vercel.app',
       'http://localhost:4200'
     ];
 
-    console.log(`[AIS] Forensic Server Initializing with Origins:`, allowedOrigins);
-
     app.enableCors({
-      origin: allowedOrigins, 
+      origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        // Allow requests with no origin (like mobile apps or curl)
+        if (!origin) return callback(null, true);
+        
+        const isAllowed = allowedOrigins.some(o => origin.startsWith(o)) || 
+                          origin.endsWith('.vercel.app');
+        
+        if (isAllowed) {
+          callback(null, true);
+        } else {
+          console.error(`[AIS Security] CORS Blocked for Origin: ${origin}`);
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       credentials: true,
       allowedHeaders: 'Content-Type,Accept,Authorization',
+      preflightContinue: false,
+      optionsSuccessStatus: 204,
     });
+
+    app.setGlobalPrefix('api');
     await app.init();
     cachedApp = app;
   }
