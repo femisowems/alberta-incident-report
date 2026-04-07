@@ -2,7 +2,7 @@
 
 An **Enterprise-Grade Provincial Command Interface** for non-emergency incident triage and forensic reporting. Built with elite UI/UX standards, modern reactive architecture, and operational intelligence.
 
-**Live Registry: [https://alberta-incident.ssowemimo.com/](https://alberta-incident.ssowemimo.com/)**
+**Live Registry: [https://albertaincident.ssowemimo.com/](https://alberta-incident.ssowemimo.com/)**
 
 ---
 
