@@ -30,15 +30,17 @@ async function bootstrap(): Promise<INestApplication> {
         if (!origin) return callback(null, true);
         
         const normalizedOrigin = origin.toLowerCase().trim();
-        
-        // Match alberta-incident.ssowemimo.com and tps-incident.ssowemimo.com (with or without dashes)
-        const isDomainMatch = /https:\/\/(alberta|tps)-?incident\.ssowemimo\.com/.test(normalizedOrigin) || 
-                             normalizedOrigin === 'https://albertaincident.ssowemimo.com';
-                             
-        const isVercelMatch = normalizedOrigin.endsWith('.vercel.app');
-        const isLocalMatch = normalizedOrigin.startsWith('http://localhost:');
+        const allowedOrigins = [
+          'https://albertaincident.ssowemimo.com',
+          'https://alberta-incident.ssowemimo.com',
+          'https://alberta-incident-report-client.vercel.app',
+          'http://localhost:4200'
+        ];
 
-        if (isDomainMatch || isVercelMatch || isLocalMatch) {
+        const isAllowed = allowedOrigins.includes(normalizedOrigin) || 
+                          normalizedOrigin.endsWith('.vercel.app');
+
+        if (isAllowed) {
           callback(null, true);
         } else {
           if (process.env.NODE_ENV === 'production') {
