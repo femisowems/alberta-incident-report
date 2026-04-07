@@ -77,14 +77,14 @@ export default async (req: any, res: any) => {
   server(req, res);
 };
 
-// Local & Production Support (Railway, etc.)
-if (process.env.NODE_ENV !== 'production' || process.env.RAILWAY_ENVIRONMENT) {
+// Local & Production Support (Railway, Docker, etc.)
+if (process.env.NODE_ENV !== 'production' || process.env.RAILWAY_ENVIRONMENT || process.env.PORT) {
   bootstrap().then(app => {
     const port = process.env.PORT || 3000;
     app.listen(port, '0.0.0.0', () => {
       console.log(`[AIS BOOT] Forensic Server activated on port ${port} (Host: 0.0.0.0)`);
     });
   }).catch(err => {
-    console.error('[AIS BOOT CRITICAL] Railway Listener Failure:', err);
+    console.error('[AIS BOOT CRITICAL] Server Listener Failure:', err);
   });
 }
