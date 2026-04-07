@@ -21,9 +21,13 @@ import { Report } from './reports/report.entity';
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         url: configService.get<string>('DATABASE_URL'),
-        entities: [Report],
-        synchronize: true, // Auto-create tables (disable in full prod)
-        ssl: configService.get<string>('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false
+        autoLoadEntities: true,
+        synchronize: true, // Use carefully in production
+        retryAttempts: 10,
+        retryDelay: 3000,
+        ssl: configService.get<string>('NODE_ENV') === 'production' 
+          ? { rejectUnauthorized: false } 
+          : false
       }),
       inject: [ConfigService],
     }),
