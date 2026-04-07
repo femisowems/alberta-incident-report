@@ -15,11 +15,19 @@
     "server"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run start:dev --workspace=server\" \"npm run start --workspace=client\"",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:client": "npm run start --workspace=client",
+    "dev:server": "npm run start:dev --workspace=server",
     "build:all": "npm run build --workspaces",
+    "build:client": "npm run build --workspace=client",
+    "build:server": "npm run build --workspace=server",
     "lint:all": "npm run lint --workspaces",
+    "lint:client": "npm run lint --workspace=client",
+    "lint:server": "npm run lint --workspace=server",
     "test:all": "npm run test --workspaces",
-    "clean": "rm -rf client/dist server/dist node_modules .angular",
+    "test:client": "npm run test --workspace=client",
+    "test:server": "npm run test --workspace=server",
+    "clean": "rm -rf client/dist server/dist node_modules .angular .nest",
     "install:all": "npm install"
   },
   "devDependencies": {
