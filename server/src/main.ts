@@ -19,30 +19,37 @@ async function bootstrap(): Promise<INestApplication> {
     }));
     
     // Dynamic CORS configuration for production resilience
-    const allowedOrigins = [
-      'https://albertaincident.ssowemimo.com', 
-      'https://alberta-incident-report-client.vercel.app',
-      'http://localhost:4200'
-    ];
-
     app.enableCors({
       origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        // Log all incoming origins in production for debugging
+        if (process.env.NODE_ENV === 'production' && origin) {
+          console.log(`[AIS CORS Handshake] Origin: ${origin}`);
+        }
+
         // Allow requests with no origin (like mobile apps or curl)
         if (!origin) return callback(null, true);
         
-        const isAllowed = allowedOrigins.some(o => origin.startsWith(o)) || 
-                          origin.endsWith('.vercel.app');
+        const normalizedOrigin = origin.toLowerCase().trim();
         
-        if (isAllowed) {
+        // Match alberta-incident.ssowemimo.com and tps-incident.ssowemimo.com (with or without dashes)
+        const isDomainMatch = /https:\/\/(alberta|tps)-?incident\.ssowemimo\.com/.test(normalizedOrigin) || 
+                             normalizedOrigin === 'https://albertaincident.ssowemimo.com';
+                             
+        const isVercelMatch = normalizedOrigin.endsWith('.vercel.app');
+        const isLocalMatch = normalizedOrigin.startsWith('http://localhost:');
+
+        if (isDomainMatch || isVercelMatch || isLocalMatch) {
           callback(null, true);
         } else {
-          console.error(`[AIS Security] CORS Blocked for Origin: ${origin}`);
-          callback(new Error('Not allowed by CORS'));
+          if (process.env.NODE_ENV === 'production') {
+            console.warn(`[AIS Security] CORS Unauthorized Origin attempted: ${origin}`);
+          }
+          callback(null, false);
         }
       },
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       credentials: true,
-      allowedHeaders: 'Content-Type,Accept,Authorization',
+      allowedHeaders: 'Content-Type,Accept,Authorization,X-Requested-With',
       preflightContinue: false,
       optionsSuccessStatus: 204,
     });
