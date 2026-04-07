@@ -20,38 +20,10 @@ async function bootstrap(): Promise<INestApplication> {
     
     // Dynamic CORS configuration for production resilience
     app.enableCors({
-      origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-        // Log all incoming origins in production for debugging
-        if (process.env.NODE_ENV === 'production' && origin) {
-          console.log(`[AIS CORS Handshake] Origin: ${origin}`);
-        }
-
-        // Allow requests with no origin (like mobile apps or curl)
-        if (!origin) return callback(null, true);
-        
-        const normalizedOrigin = origin.toLowerCase().trim();
-        const allowedOrigins = [
-          'https://albertaincident.ssowemimo.com',
-          'https://alberta-incident.ssowemimo.com',
-          'https://alberta-incident-report-client.vercel.app',
-          'http://localhost:4200'
-        ];
-
-        const isAllowed = allowedOrigins.includes(normalizedOrigin) || 
-                          normalizedOrigin.endsWith('.vercel.app');
-
-        if (isAllowed) {
-          callback(null, true);
-        } else {
-          if (process.env.NODE_ENV === 'production') {
-            console.warn(`[AIS Security] CORS Unauthorized Origin attempted: ${origin}`);
-          }
-          callback(null, false);
-        }
-      },
+      origin: true,
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       credentials: true,
-      allowedHeaders: 'Content-Type,Accept,Authorization,X-Requested-With',
+      allowedHeaders: '*',
       preflightContinue: false,
       optionsSuccessStatus: 204,
     });
