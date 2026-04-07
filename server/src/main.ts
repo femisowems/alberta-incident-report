@@ -28,18 +28,26 @@ async function bootstrap(): Promise<INestApplication> {
 
     app.enableCors({
       origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-        // Allow requests with no origin (like mobile apps or curl)
+        // Log all incoming origins in production for debugging
+        if (process.env.NODE_ENV === 'production') {
+          console.log(`[AIS CORS Handshake] Origin: ${origin || 'No Origin'}`);
+        }
+
         if (!origin) return callback(null, true);
         
-        const normalizedOrigin = origin.toLowerCase();
-        const isAllowed = allowedOrigins.some(o => normalizedOrigin.startsWith(o.toLowerCase())) || 
-                          normalizedOrigin.endsWith('.vercel.app');
+        const normalizedOrigin = origin.toLowerCase().trim();
         
-        if (isAllowed) {
+        // Match alberta-incident.ssowemimo.com and tps-incident.ssowemimo.com (with or without dashes)
+        const isDomainMatch = /https:\/\/(alberta|tps)-?incident\.ssowemimo\.com/.test(normalizedOrigin) || 
+                             normalizedOrigin === 'https://albertaincident.ssowemimo.com';
+                             
+        const isVercelMatch = normalizedOrigin.endsWith('.vercel.app');
+        const isLocalMatch = normalizedOrigin.startsWith('http://localhost:');
+
+        if (isDomainMatch || isVercelMatch || isLocalMatch) {
           callback(null, true);
         } else {
           console.warn(`[AIS Security] CORS Unauthorized Origin attempted: ${origin}`);
-          // Use null, false to allow standard browser blocking without server exceptions
           callback(null, false);
         }
       },
